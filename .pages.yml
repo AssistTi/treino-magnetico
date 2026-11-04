@@ -1,0 +1,21 @@
+media:
+  input: media
+  output: /media
+content:
+  - name: pagina
+    label: Página de vendas
+    type: file
+    path: content/site.json
+    fields:
+      - { name: titulo, label: Título principal, type: string }
+      - { name: subtitulo, label: Texto de apresentação, type: text }
+      - { name: preco, label: Preço em reais, type: string }
+      - { name: link_compra, label: Link do checkout, type: string }
+      - { name: titulo_problema, label: Título da seção de identificação, type: string }
+      - { name: titulo_guia, label: Nome do guia, type: string }
+      - { name: titulo_bruna, label: Título da seção da Bruna, type: string }
+      - { name: texto_bruna, label: Texto sobre a Bruna (opcional), type: text }
+      - { name: foto_bruna, label: Foto da Bruna (caminho ou URL), type: image }
+      - { name: titulo_oferta, label: Título da oferta, type: string }
+      - { name: depoimento_1, label: Depoimento real 1, type: text }
+      - { name: depoimento_2, label: Depoimento real 2, type: text }
