@@ -1,0 +1,36 @@
+name: Ativar conteúdo editável
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'cms-content.js'
+      - '.github/workflows/ativar-cms.yml'
+permissions:
+  contents: write
+jobs:
+  ativar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Vincular página ao painel
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          if not p.exists(): raise SystemExit('index.html não encontrado')
+          s=p.read_text(encoding='utf-8')
+          if 'src="cms-content.js"' not in s:
+              s=s.replace('</body>', '<script src="cms-content.js" defer></script>\n</body>')
+              p.write_text(s,encoding='utf-8')
+          PY
+      - name: Salvar integração
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if ! git diff --cached --quiet; then
+            git commit -m "Conectar página ao painel de conteúdo"
+            git push
+          fi
