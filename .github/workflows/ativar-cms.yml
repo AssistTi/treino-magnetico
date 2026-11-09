@@ -26,7 +26,7 @@ jobs:
               s=s.replace('</body>', '<script src="cms-content.js" defer></script>\n</body>')
               p.write_text(s,encoding='utf-8')
           if 'src="narrativa-magnetica.js"' not in s:
-              s=s.replace('</body>', '<script src="narrativa-magnetica.js" defer></script>\\n</body>')
+              s=s.replace('</body>', '<script src="narrativa-magnetica.js" defer></script>\n</body>')
               p.write_text(s,encoding='utf-8')
           PY
       - name: Salvar integração
