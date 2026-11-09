@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - 'cms-content.js'
+      - 'narrativa-magnetica.js'
       - '.github/workflows/ativar-cms.yml'
 permissions:
   contents: write
@@ -23,6 +24,9 @@ jobs:
           s=p.read_text(encoding='utf-8')
           if 'src="cms-content.js"' not in s:
               s=s.replace('</body>', '<script src="cms-content.js" defer></script>\n</body>')
+              p.write_text(s,encoding='utf-8')
+          if 'src="narrativa-magnetica.js"' not in s:
+              s=s.replace('</body>', '<script src="narrativa-magnetica.js" defer></script>\\n</body>')
               p.write_text(s,encoding='utf-8')
           PY
       - name: Salvar integração
