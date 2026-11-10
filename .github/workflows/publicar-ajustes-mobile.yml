@@ -1,0 +1,37 @@
+name: Aplicar ajustes de responsividade
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'ajustes-centralizacao-mobile.css'
+      - '.github/workflows/publicar-ajustes-mobile.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  aplicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Adicionar CSS à página
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          if not p.exists(): raise SystemExit('Página principal não encontrada')
+          html=p.read_text(encoding='utf-8')
+          marker='<link rel="stylesheet" href="ajustes-centralizacao-mobile.css">'
+          if marker not in html:
+              if '</head>' not in html: raise SystemExit('HTML sem fechamento de head')
+              html=html.replace('</head>',marker+'\n</head>',1)
+              p.write_text(html,encoding='utf-8')
+          PY
+      - name: Publicar ajuste
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if ! git diff --cached --quiet; then
+            git commit -m "Ativar correções de layout e mobile"
+            git push
+          fi
