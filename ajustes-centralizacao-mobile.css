@@ -1,0 +1,17 @@
+/* Centralização do Desafio 7 Dias e melhorias mobile */
+.challenge-section{padding-block:clamp(64px,7vw,100px)}
+.challenge-section .challenge-wrap{width:min(100%,960px);margin-inline:auto;padding-inline:clamp(20px,4vw,42px)}
+.challenge-section .challenge-heading{max-width:700px;margin-inline:auto;text-align:center}
+.challenge-section .challenge-heading h2{margin:0 auto 16px;max-width:680px;text-wrap:balance}
+.challenge-section .challenge-heading p{max-width:620px;margin:0 auto;line-height:1.75;text-wrap:pretty}
+.challenge-section .bullets{max-width:740px;margin:34px auto 0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:clamp(18px,4vw,56px);row-gap:16px;align-items:start}
+.challenge-section .bullet{display:flex;align-items:flex-start;gap:12px;line-height:1.5;font-size:15px}
+.challenge-section .bullet:before{flex:0 0 auto}
+img,video,iframe{max-width:100%}
+.hero-grid,.story-grid,.grid2,.grid3,.timeline-track{min-width:0}
+.hero-grid>*,.story-grid>*,.grid2>*,.grid3>*{min-width:0}
+@media(max-width:760px){
+.wrap{padding-inline:20px}.hero-grid{gap:30px;padding:34px 0 54px}.hero-grid h1{font-size:clamp(32px,8vw,45px);line-height:1.12;overflow-wrap:break-word}.lead{font-size:16px;line-height:1.65}.section{padding-block:clamp(52px,10vw,72px)}.section h2{font-size:clamp(28px,7vw,38px);line-height:1.16;text-wrap:balance}.story-grid{gap:28px}.story-copy p{font-size:15px;line-height:1.75}.challenge-section .challenge-wrap{padding-inline:22px}.challenge-section .challenge-heading{max-width:100%}.challenge-section .challenge-heading p{font-size:15px;line-height:1.7}.challenge-section .bullets{grid-template-columns:1fr;max-width:390px;gap:17px;margin-top:28px}.challenge-section .bullet{font-size:15px}.preview-shell{width:100%;gap:6px}.preview-book{min-width:0}.preview-arrow{flex:0 0 36px}.quiz-card,.pricebox{max-width:100%;margin-inline:auto}.sticky-buy{padding:10px max(12px,env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));gap:10px}.sticky-buy button{min-width:0;max-width:100%;line-height:1.25}.btn{max-width:100%;white-space:normal;overflow-wrap:anywhere}
+}
+@media(max-width:390px){.wrap{padding-inline:16px}.hero-grid h1{font-size:clamp(30px,8.2vw,36px)}.challenge-section .challenge-wrap{padding-inline:18px}.challenge-section .bullet{font-size:14px}.sticky-price strong{font-size:17px}.sticky-buy button{font-size:12px;padding:12px 10px}.timeline-track{grid-template-columns:1fr 1fr;gap:8px}}
+@media(prefers-reduced-motion:reduce){.challenge-section *{transition:none!important;animation:none!important}}
