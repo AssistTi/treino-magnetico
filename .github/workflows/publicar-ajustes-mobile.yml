@@ -43,7 +43,12 @@ jobs:
           script='<script src="desafio-7-dias-redesign.js" defer></script>'
           if script not in html:
               html=html.replace('</body>',script+'\n</body>',1)
-          if 'desafio-7-dias-redesign.js' not in html: raise SystemExit('Falha ao inserir novo layout')
+          if 'id="desafio-7-dias"' not in html:
+              raise SystemExit('Seção Desafio não encontrada no HTML')
+          if 'src="desafio-7-dias-redesign.js"' not in html:
+              raise SystemExit('Script do novo layout não foi vinculado')
+          if 'src="desafio-7-dias-redesign.js"' not in html:
+              raise SystemExit('Falha ao inserir novo layout')
           p.write_text(html,encoding='utf-8')
           print('Nova seção ativada, título e preço ajustados')
           PY
