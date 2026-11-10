@@ -27,13 +27,15 @@ jobs:
           html=html.replace('Você treina, se dedica… mas sente que ainda falta alguma coisa?', 'Você treina, se dedica, mas parece que nunca sai do mesmo lugar?')
           html=html.replace('Você não precisa trocar de treino toda hora. Precisa mudar a forma como treina.', 'Você treina, se dedica, mas parece que nunca sai do mesmo lugar?')
           # Retirar preços de botões antes da oferta.
-          parts=re.split(r'(<section\\b[^>]*\\bid=["\\\']oferta["\\\'][^>]*>)',html,maxsplit=1,flags=re.I)
-          pre=parts[0]
-          pre=re.sub(r'QUERO MEU GUIA POR R\\$\\s*29,90\\s*→','QUERO CONHECER O GUIA →',pre,flags=re.I)
-          pre=re.sub(r'COMEÇAR PELO GUIA DE R\\$\\s*29,90\\s*→','QUERO CONHECER O GUIA →',pre,flags=re.I)
-          pre=re.sub(r'CONHECER O GUIA POR R\\$\\s*29,90\\s*→','QUERO CONHECER O GUIA →',pre,flags=re.I)
-          pre=re.sub(r'Guia digital\\s*[•·]\\s*Acesso por R\\$\\s*29,90','Guia digital • Treine com mais intenção',pre,flags=re.I)
-          html=pre+''.join(parts[1:])
+          marker=html.find('id="oferta"')
+          boundary=html.rfind('<section',0,marker) if marker>=0 else len(html)
+          pre=html[:boundary]
+          post=html[boundary:]
+          pre=re.sub(r'QUERO MEU GUIA POR R\$\s*29,90\s*→','QUERO CONHECER O GUIA →',pre,flags=re.I)
+          pre=re.sub(r'COMEÇAR PELO GUIA DE R\$\s*29,90\s*→','QUERO CONHECER O GUIA →',pre,flags=re.I)
+          pre=re.sub(r'CONHECER O GUIA POR R\$\s*29,90\s*→','QUERO CONHECER O GUIA →',pre,flags=re.I)
+          pre=re.sub(r'Guia digital\s*[•·]\s*Acesso por R\$\s*29,90','Guia digital • Treine com mais intenção',pre,flags=re.I)
+          html=pre+post
           html=html.replace('A mentoria está incluída nos R$ 29,90?', 'A mentoria está incluída no guia?')
           link='<link rel="stylesheet" href="ajustes-centralizacao-mobile.css">'
           if link not in html:
