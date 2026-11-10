@@ -1,42 +1,56 @@
-name: Aplicar ajustes de responsividade
+name: Aplicar nova versão da página
 on:
   push:
     branches: [main]
     paths:
-      - 'ajustes-centralizacao-mobile.css'
-      - 'desafio-7-dias-redesign.js'
       - '.github/workflows/publicar-ajustes-mobile.yml'
+      - 'desafio-7-dias-redesign.js'
+      - 'ajustes-centralizacao-mobile.css'
   workflow_dispatch:
 permissions:
   contents: write
 jobs:
-  aplicar:
+  atualizar:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Adicionar CSS à página
+        with:
+          persist-credentials: true
+      - name: Atualizar página e preservar oferta
         run: |
           python3 - <<'PY'
           from pathlib import Path
+          import re
           p=Path('index.html')
-          if not p.exists(): raise SystemExit('Página principal não encontrada')
           html=p.read_text(encoding='utf-8')
-          marker='<link rel="stylesheet" href="ajustes-centralizacao-mobile.css">'
-          if marker not in html:
-              if '</head>' not in html: raise SystemExit('HTML sem fechamento de head')
-              html=html.replace('</head>',marker+'\n</head>',1)
-              p.write_text(html,encoding='utf-8')
+          # Abertura com dor primeiro, sem alterar outras seções.
+          html=html.replace('Você treina, se dedica… mas sente que ainda falta alguma coisa?', 'Você treina, se dedica, mas parece que nunca sai do mesmo lugar?')
+          html=html.replace('Você não precisa trocar de treino toda hora. Precisa mudar a forma como treina.', 'Você treina, se dedica, mas parece que nunca sai do mesmo lugar?')
+          # Retirar preços de botões antes da oferta.
+          parts=re.split(r'(<section\\b[^>]*\\bid=["\\\']oferta["\\\'][^>]*>)',html,maxsplit=1,flags=re.I)
+          pre=parts[0]
+          pre=re.sub(r'QUERO MEU GUIA POR R\\$\\s*29,90\\s*→','QUERO CONHECER O GUIA →',pre,flags=re.I)
+          pre=re.sub(r'COMEÇAR PELO GUIA DE R\\$\\s*29,90\\s*→','QUERO CONHECER O GUIA →',pre,flags=re.I)
+          pre=re.sub(r'CONHECER O GUIA POR R\\$\\s*29,90\\s*→','QUERO CONHECER O GUIA →',pre,flags=re.I)
+          pre=re.sub(r'Guia digital\\s*[•·]\\s*Acesso por R\\$\\s*29,90','Guia digital • Treine com mais intenção',pre,flags=re.I)
+          html=pre+''.join(parts[1:])
+          html=html.replace('A mentoria está incluída nos R$ 29,90?', 'A mentoria está incluída no guia?')
+          link='<link rel="stylesheet" href="ajustes-centralizacao-mobile.css">'
+          if link not in html:
+              html=html.replace('</head>',link+'\n</head>',1)
           script='<script src="desafio-7-dias-redesign.js" defer></script>'
           if script not in html:
               html=html.replace('</body>',script+'\n</body>',1)
-              p.write_text(html,encoding='utf-8')
+          if 'desafio-7-dias-redesign.js' not in html: raise SystemExit('Falha ao inserir novo layout')
+          p.write_text(html,encoding='utf-8')
+          print('Nova seção ativada, título e preço ajustados')
           PY
-      - name: Publicar ajuste
+      - name: Publicar alterações
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
           if ! git diff --cached --quiet; then
-            git commit -m "Ativar correções de layout e mobile"
+            git commit -m "Corrigir abertura e ativar redesign do desafio"
             git push
           fi
