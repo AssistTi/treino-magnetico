@@ -1,0 +1,41 @@
+name: Publicar novo design e checkout
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publicar-checkout-e-novo-design.yml'
+      - 'nova-pagina-checkout.js'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Vincular checkout e novo layout à página principal
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          html=p.read_text(encoding='utf-8')
+          script='<script src="nova-pagina-checkout.js" defer></script>'
+          if script not in html:
+              if '</body>' not in html: raise SystemExit('Fechamento body não encontrado')
+              html=html.replace('</body>',script+'\n</body>',1)
+          # Checkout também é definido no HTML para funcionar sem JS externo.
+          import re
+          url='https://pay.kiwify.com.br/mlcDzUh?utm_id=97760_v0_s00_e0_tv4'
+          html=re.sub(r'function\s+comprar\s*\(\s*\)\s*\{[^{}]*\}',lambda m:'function comprar(){window.location.href="'+url+'";}',html,count=1)
+          p.write_text(html,encoding='utf-8')
+          assert script in html
+          PY
+      - name: Salvar página no GitHub
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if ! git diff --cached --quiet; then
+            git commit -m "Publicar novo layout e checkout Kiwify"
+            git push
+          fi
